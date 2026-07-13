@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Master Data Main Menu -->
+    <menuitem
+        id="menu_master_data_root"
+        name="Master Data"
+        sequence="1"/>
+
+</odoo>

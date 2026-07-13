@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View For Employee -->
+    <record id = "view_form_employee" model = "ir.ui.view">
+        <field name = "name">view.form.employee</field>
+        <field name = "model">hr.employee</field>
+        <field name = "inherit_id" ref = "hr.view_employee_form"/>
+        <field name = "arch" type = "xml">
+            <xpath expr="//field[@name='mobile_phone']" position = "before">
+                <field name = "employee_code"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position = "after">
+                <field name = "report_to"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position = "after">
+                <field name = "bu_name"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position = "before">
+                <field name = "department" domain="[('holding_business', '=', bu_name)]"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position = "before">
+                <field name = "join_date"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position = "after">
+                <field name = "status"/>
+            </xpath>
+            <xpath expr="//field[@name='status']" position = "after">
+                <field name = "active"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- For Private Information Page -->
+            <xpath expr="//field[@name='bank_account_id']" position = "after">
+                <field name = "home_no_id"/>
+            </xpath>
+            <xpath expr="//field[@name='home_no_id']" position = "after">
+                <field name = "street_id"/>
+            </xpath>
+            <xpath expr="//field[@name='street_id']" position = "after">
+                <field name = "township_id"/>
+            </xpath>
+            <xpath expr="//field[@name='township_id']" position = "after">
+                <field name = "city_id"/>
+            </xpath>
+            <xpath expr="//field[@name='gender']" position = "before">
+                <field name = "phone_number"/>
+            </xpath>
+            <xpath expr="//field[@name='address_home_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_email']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_of_birth']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record> 
+
+    <!-- Window Action -->
+    <record id="action_employee" model="ir.actions.act_window">
+        <field name="name">Employee</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_id" ref="hr.hr_kanban_view_employees"/>
+    </record>
+
+    <!-- Employee Menu -->
+    <menuitem
+        id="menu_employee"
+        name="Employee"
+        parent="employee_management_system.menu_employee_management_root"
+        action="action_employee"
+        sequence="10"/>
+
+</odoo>

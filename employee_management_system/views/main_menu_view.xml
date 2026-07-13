@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_employee_management_root"
+        name="Employee Management"
+        sequence="1"/>
+
+</odoo>

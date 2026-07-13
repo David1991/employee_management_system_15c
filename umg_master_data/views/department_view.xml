@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View For Department -->
+    <record id="view_tree_department" model="ir.ui.view">
+        <field name="name">view.tree.department</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="holding_business"/>
+            </tree>
+        </field>
+    </record>
+
+        <!-- Form View For Department -->
+    <record id="view_form_department" model="ir.ui.view">
+        <field name="name">view.form.department</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>    
+                    <group>
+                        <group> 
+                            <field name="name"/>
+                            <field name="code"/>  
+                            <field name="holding_business"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_department" model="ir.actions.act_window">
+        <field name="name">Department</field>
+        <field name="res_model">department</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Department Menu -->
+    <menuitem
+        id="menu_department"
+        name="Department"
+        parent="menu_master_data_root"
+        action="action_department"
+        sequence="20"/>
+
+</odoo>

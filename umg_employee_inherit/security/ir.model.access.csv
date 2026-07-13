@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_employee,hr_employee,model_hr_employee,base.group_user,1,1,1,1
+access_employee_city,employee_city,model_employee_city,base.group_user,1,1,1,1
+access_employee_township,employee_township,model_employee_township,base.group_user,1,1,1,1
+access_employee_street,employee_street,model_employee_street,base.group_user,1,1,1,1
+access_employee_home_number,employee_home_number,model_employee_home_number,base.group_user,1,1,1,1

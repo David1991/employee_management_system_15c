@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View For Leave Type -->
+    <record id="view_tree_leave_type" model="ir.ui.view">
+        <field name="name">view.tree.leave.type</field>
+        <field name="model">leave.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="entitled_days"/>
+            </tree>
+        </field>
+    </record>
+
+        <!-- Form View For Leave Type -->
+    <record id="view_form_leave_type" model="ir.ui.view">
+        <field name="name">view.form.leave.type</field>
+        <field name="model">leave.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>    
+                    <group>
+                        <group> 
+                            <field name="name"/>
+                            <field name="entitled_days"/>  
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_leave_type" model="ir.actions.act_window">
+        <field name="name">Leave Type</field>
+        <field name="res_model">leave.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Leave Type Menu -->
+    <menuitem
+        id="menu_leave_type"
+        name="Leave Type"
+        parent="menu_master_data_root"
+        action="action_leave_type"
+        sequence="30"/>
+
+</odoo>

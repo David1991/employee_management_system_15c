@@ -1,0 +1,13 @@
+<?xml version= "1.0" encoding="UTF-8"?>
+
+<odoo>
+    <!-- Sequence number for Employee -->
+    <record id="sequence_employee" model="ir.sequence">
+        <field name="name">Employee</field>
+        <field name="code">hr.employee</field>
+        <field name="prefix">UMG-</field>
+        <field name="padding">6</field>
+        <field name="company_id" eval = "False"/>                
+    </record>
+
+</odoo>

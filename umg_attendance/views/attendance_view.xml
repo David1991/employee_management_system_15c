@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View For Attendance -->
+    <record id="view_tree_attendance" model="ir.ui.view">
+        <field name="name">view.tree.attendance</field>
+        <field name="model">attendance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_name"/>
+                <field name="employee_code"/>
+                <field name="date"/>
+                <field name="bu_name"/>
+                <field name="department"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+        <!-- Form View For Attendance -->
+    <record id="view_form_attendance" model="ir.ui.view">
+        <field name="name">view.form.attendance</field>
+        <field name="model">attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>    
+                    <group>
+                        <group> 
+                            <field name="employee_name"/>
+                            <field name="employee_code"/>
+                            <field name="date"/>
+                            <field name="bu_name"/>  
+                        </group>
+                        <group>
+                            <field name="department"/>
+                            <field name="check_in"/>
+                            <field name="check_out"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">attendance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Attendance Menu -->
+    <menuitem
+        id="menu_attendance"
+        name="Attendance"
+        parent="employee_management_system.menu_employee_management_root"
+        action="action_attendance"
+        sequence="40"/>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<odoo>
+    <!-- Form View for Leave Wizard -->
+    <record id = "view_leave_wizard_form" model = "ir.ui.view">
+        <field name = "name">view.leave.wizard.form</field>
+        <field name = "model">leave.wizard</field>
+        <field name = "arch" type = "xml">
+            <form>
+                <group>
+                    <group>
+                        <field name = "date_from"/>
+                        <field name = "date_to"/>
+                    </group>
+                    <group>    
+                        <field name = "employee_name"/>
+                        <field name = "bu_name"/>
+                        <field name = "department"/>
+                    </group>
+                    <group>
+                         <footer> 
+                            <button name="action_print_excel" string="Print Excel Report" type="object" class="btn-primary"/>
+                            <button special="cancel" string="Discard" class="btn-secondary"/>
+                        </footer>   
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id = "action_leave_wizard" model = "ir.actions.act_window">
+        <field name = "name">Leave Wizard</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">leave.wizard</field>
+        <field name = "view_mode">form</field>
+        <field name = "target">new</field>
+    </record>
+
+    <menuitem id = "leave_wizard_menu"
+                name = "Leave Wizard"
+                action = "action_leave_wizard"
+                parent = "menu_main_leave"
+                sequence = "20"/>
+</odoo>

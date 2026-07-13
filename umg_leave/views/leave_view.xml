@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View For Leave -->
+    <record id="view_tree_leave" model="ir.ui.view">
+        <field name="name">view.tree.leave</field>
+        <field name="model">leave</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_name"/>
+                <field name="employee_code"/>
+                <field name="bu_name"/>
+                <field name="department"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="duration"/>
+                <field name="leave_title"/>
+                <field name = "allocation_year"/>    
+                <field name = "entitled_days"/>
+                <field name = "taken_days"/>
+                <field name = "balance_days"/>
+                <field name="report_to"/>
+                <field name="reason"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+        <!-- Form View For Leave -->
+    <record id="view_form_leave" model="ir.ui.view">
+        <field name="name">view.form.leave</field>
+        <field name="model">leave</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>    
+                    <group>
+                        <group> 
+                            <field name="employee_name"/>
+                            <field name="employee_code"/>
+                            <field name="bu_name"/>
+                            <field name="department"/>  
+                            <field name="date_from"/>  
+                            <field name="date_to"/> 
+                            <field name="duration"/>
+                        </group>
+                        <group>
+                            <field name="leave_title"/>
+                            <field name = "allocation_year"/>    
+                            <field name = "entitled_days"/>
+                            <field name = "taken_days"/>
+                            <field name = "balance_days"/>
+                            <field name="report_to"/>
+                            <field name="reason"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_leave" model="ir.actions.act_window">
+        <field name="name">Leave</field>
+        <field name="res_model">leave</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Leave Menu -->
+    <menuitem
+        id="menu_leave"
+        name="Leave"
+        parent="menu_main_leave"
+        action="action_leave"
+        sequence="10"/>
+
+</odoo>

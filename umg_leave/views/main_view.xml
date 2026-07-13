@@ -1,0 +1,9 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<odoo>
+    <!-- For Leave Main Menu -->
+    <menuitem
+        id="menu_main_leave"
+        name="Leaves"
+        parent="employee_management_system.menu_employee_management_root"
+        sequence="50"/>
+</odoo>
