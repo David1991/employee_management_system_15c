@@ -3,3 +3,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_leave,leave,model_leave,base.group_user,1,1,1,1
 access_leave_wizard,leave_wizard,model_leave_wizard,base.group_user,1,1,1,1
 access_leave_excel_report,leave_excel_report,model_leave_excel_report,base.group_user,1,1,1,1
+
+access_leave_user,leave_user,model_leave,group_leave_user,1,0,0,0
+access_leave_manager,leave_manager,model_leave,group_leave_manager,1,1,1,1

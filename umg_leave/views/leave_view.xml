@@ -52,7 +52,7 @@
                             <field name = "balance_days"/>
                             <field name="report_to"/>
                             <field name="reason"/>
-                            <field name="status"/>
+                            <field name="status" groups="umg_leave.group_leave_manager"/>
                         </group>
                     </group>
                 </sheet>

@@ -54,11 +54,14 @@ class Leave(models.Model):
                     raise ValidationError(
                         "Date To must be greater than Date From!"
                     )
-                # Employees can't request leave before Today
-                if rec.date_from < today:
-                    raise ValidationError(
-                        "You cannot apply leave for a past date!"
-                    )
+                
+                # Leave Manager can create backdated leave
+                if not self.env.user.has_group("umg_leave.group_leave_manager"):
+                    # Employees can't request leave before Today
+                    if rec.date_from < today:
+                        raise ValidationError(
+                            "You cannot apply leave for a past date!"
+                        )
                 
     # Check the entitled days depend on leave title and employee status
     @api.depends("leave_title", "employee_name", "employee_name.status")

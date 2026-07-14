@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_attendance,attendance,model_attendance,base.group_user,1,1,1,1
+access_attendance_user,attendance_user,model_attendance,group_attendance_user,1,0,0,0
+access_attendance_manager,attendance_manager,model_attendance,group_attendance_manager,1,1,1,1

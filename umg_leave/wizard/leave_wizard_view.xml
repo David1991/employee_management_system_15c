@@ -39,5 +39,6 @@
                 name = "Leave Wizard"
                 action = "action_leave_wizard"
                 parent = "menu_main_leave"
-                sequence = "20"/>
+                sequence = "20"
+                groups="umg_leave.group_leave_manager"/>
 </odoo>

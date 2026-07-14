@@ -4,6 +4,7 @@
     <menuitem
         id="menu_master_data_root"
         name="Master Data"
-        sequence="1"/>
+        sequence="1"
+        groups="umg_master_data.group_business_unit_manager,umg_master_data.group_department_manager,umg_master_data.group_leave_entitlement_manager,umg_master_data.group_leave_type_manager"/>
 
 </odoo>

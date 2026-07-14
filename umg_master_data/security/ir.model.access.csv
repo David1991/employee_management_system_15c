@@ -1,7 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-
 access_business_unit,business_unit,model_business_unit,base.group_user,1,1,1,1
 access_department,department,model_department,base.group_user,1,1,1,1
 access_leave_type,leave_type,model_leave_type,base.group_user,1,1,1,1
 access_leave_entitlement,leave_entitlement,model_leave_entitlement,base.group_user,1,1,1,1
+
+access_business_unit_manager,business_unit_manager,model_business_unit,group_business_unit_manager,1,1,1,1
+access_department_manager,department_manager,model_department,group_department_manager,1,1,1,1
+access_leave_type_manager,leave_type_manager,model_leave_type,group_leave_type_manager,1,1,1,1
+access_leave_entitlement_manager,leave_entitlement_manager,model_leave_entitlement,group_leave_entitlement_manager,1,1,1,1
