@@ -10,6 +10,7 @@ class Leave(models.Model):
     # For Leave Form
     employee_name = fields.Many2one("hr.employee", string="Employee Name")
     employee_code = fields.Char(related = "employee_name.employee_code", string="Employee ID")
+    employee_status = fields.Selection(related = "employee_name.status", string = "Employee Status", store = True)
     bu_name = fields.Many2one(related = "employee_name.bu_name", string="BU Name")
     department = fields.Many2one(related = "employee_name.department", string="Department")
     date_from = fields.Date(string="Date From")
@@ -18,7 +19,8 @@ class Leave(models.Model):
     leave_title = fields.Many2one("leave.type", string="Leave Title")
     allocation_year = fields.Integer(string="Allocation Year",
         default=lambda self: fields.Date.today().year, required=True)
-    entitled_days = fields.Integer(related="leave_title.entitled_days",
+    # A lambda is an anonymous (unnamed) function.
+    entitled_days = fields.Integer(compute="_compute_entitled_days",
     string="Entitled Days", store=True)
     taken_days = fields.Integer(related="duration", store=True, string="Taken Days")
     balance_days = fields.Integer(compute="_compute_balance_days",
@@ -58,11 +60,41 @@ class Leave(models.Model):
                         "You cannot apply leave for a past date!"
                     )
                 
+    # Check the entitled days depend on leave title and employee status
+    @api.depends("leave_title", "employee_name", "employee_name.status")
+    def _compute_entitled_days(self):
+        for rec in self:
+            rec.entitled_days = 0
+
+            if rec.leave_title and rec.employee_status:
+
+                entitlement = self.env["leave.entitlement"].search([
+                    ("leave_type_id", "=", rec.leave_title.id),
+                    ("employee_status", "=", rec.employee_status),
+                ], limit=1)
+
+                if entitlement:
+                    rec.entitled_days = entitlement.entitled_days 
+
     # Calculating the leave balance days depend on employee name, leave type,allocation year and entitled days
-    @api.depends("employee_name", "leave_title", "allocation_year", "entitled_days")
+    @api.depends("employee_name", "employee_status", "leave_title", "allocation_year", "entitled_days", "duration", "status")
     def _compute_balance_days (self):
         Leave = self.env['leave']
-        for rec in self:
+        LeaveEntitlement = self.env["leave.entitlement"]
+
+        for rec in self:     
+
+             if not rec.employee_name or not rec.leave_title:
+                continue
+
+             # Find entitlement based on leave type and employee status
+             entitlement = LeaveEntitlement.search([
+                    ("leave_type_id", "=", rec.leave_title.id),
+                    ("employee_status", "=", rec.employee_status),
+                ], limit=1)
+
+             entitled_days = entitlement.entitled_days if entitlement else 0
+    
              year_start = date(rec.allocation_year, 1, 1)
              year_end = date(rec.allocation_year, 12, 31)
 
@@ -75,4 +107,4 @@ class Leave(models.Model):
 
              taken_days = sum(leaves.mapped("duration"))
 
-             rec.balance_days = rec.entitled_days - taken_days
+             rec.balance_days = entitled_days - taken_days

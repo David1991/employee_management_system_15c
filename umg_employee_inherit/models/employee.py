@@ -19,8 +19,8 @@ class Employee(models.Model):
     home_no_id = fields.Many2one("employee.home.number",string="Home Number")
     status = fields.Selection([
         ('probation', 'Probation'),
-        ('confirmation', 'Comfirmation'),
-    ],string="Status")
+        ('confirmation', 'Confirmation'),
+    ],string="Status", default = "probation")
     active = fields.Boolean(string="Active", default = True)
     # For Attendance Form
     # date = fields.Date(string="Date")

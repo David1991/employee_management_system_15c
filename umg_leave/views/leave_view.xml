@@ -8,6 +8,7 @@
             <tree>
                 <field name="employee_name"/>
                 <field name="employee_code"/>
+                <field name="employee_status"/>
                 <field name="bu_name"/>
                 <field name="department"/>
                 <field name="date_from"/>
@@ -36,6 +37,7 @@
                         <group> 
                             <field name="employee_name"/>
                             <field name="employee_code"/>
+                            <field name="employee_status"/>
                             <field name="bu_name"/>
                             <field name="department"/>  
                             <field name="date_from"/>  

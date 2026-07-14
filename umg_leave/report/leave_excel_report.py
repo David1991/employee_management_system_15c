@@ -24,6 +24,7 @@ class LeaveExcelReport(models.TransientModel):
         headers = [
             "Employee Name",
             "Employee ID",
+            "Employee Status",
             "BU Name",
             "Department",
             "Leave Title",
@@ -41,12 +42,13 @@ class LeaveExcelReport(models.TransientModel):
         for leave in records:
             sheet.write(row, 0, leave.employee_name.name)
             sheet.write(row, 1, leave.employee_code)
-            sheet.write(row, 2, leave.bu_name.name)
-            sheet.write(row, 3, leave.department.name)
-            sheet.write(row, 4, leave.leave_title.name)
-            sheet.write(row, 5, leave.entitled_days)
-            sheet.write(row, 6, leave.duration)
-            sheet.write(row, 7, leave.balance_days)
+            sheet.write(row, 2, leave.employee_status)
+            sheet.write(row, 3, leave.bu_name.name)
+            sheet.write(row, 4, leave.department.name)
+            sheet.write(row, 5, leave.leave_title.name)
+            sheet.write(row, 6, leave.entitled_days)
+            sheet.write(row, 7, leave.duration)
+            sheet.write(row, 8, leave.balance_days)
 
             row += 1
 
