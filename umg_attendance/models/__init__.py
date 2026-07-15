@@ -2,3 +2,4 @@
 
 from . import models
 from . import attendance
+from . import res_users
