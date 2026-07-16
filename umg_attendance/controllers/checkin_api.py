@@ -1,6 +1,7 @@
 from odoo import http, fields
 from odoo.http import request
 from odoo.exceptions import ValidationError
+from datetime import time
 
 class CheckInAPI(http.Controller):
     @http.route(
@@ -24,6 +25,20 @@ class CheckInAPI(http.Controller):
             }
         
         today = fields.Date.context_today(request.env.user)
+
+        leave = request.env['leave'].sudo().search([
+            ('employee_name', '=', employee.id),
+            ('status', '=', 'approve'),
+            ('date_from', '<=', today),
+            ('date_to', '>=', today),
+        ], limit=1)
+
+        if leave:
+            return {
+                'status': False,
+                'message': 'You are on approved leave today.'
+            }
+        
         # Check whether employee already checked in today
         attendance = request.env['attendance'].sudo().search([
             ('employee_name', '=', employee.id),
@@ -37,10 +52,31 @@ class CheckInAPI(http.Controller):
             }
         
         try:
+            check_in = fields.Datetime.now()
+
+            # Calculate status
+            local_time = fields.Datetime.context_timestamp(
+                request.env['attendance'],
+                check_in
+            ).time()
+
+            if local_time <= time(8, 0):
+                status = "present"
+
+            elif local_time <= time(9, 0):
+                status = "late"
+
+            else:
+                status = "absent"
+
             attendance = request.env['attendance'].sudo().create({
                 'employee_name' : employee.id,
+                'employee_code' : employee.employee_code,
+                'bu_name' : employee.bu_name,
+                'department' : employee.department,
                 'date' : today,
-                'check_in' : fields.Datetime.now(),
+                'check_in' : check_in,
+                'status' : status,
             })
             return {
                 'status' : True,
@@ -49,6 +85,8 @@ class CheckInAPI(http.Controller):
                 'employee_name' : employee.name,
                 'employee_code' : employee.employee_code,
                 'date' : attendance.date,
+                'bu_name' : employee.bu_name,
+                'department' : employee.department,
                 'check_in' : attendance.check_in,
                 'status_value' : attendance.status,
             }

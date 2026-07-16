@@ -6,11 +6,11 @@ class Employee(models.Model):
     _description = "Employee"
     
     # For Employee Form
-    employee_code = fields.Char(string="Employee ID")
-    join_date = fields.Date(string="Join Date")
+    employee_code = fields.Char(string="Employee ID", readonly = "1")
+    join_date = fields.Date(string="Join Date", required = True)
     phone_number = fields.Char(string="Phone Number")
-    bu_name = fields.Many2one("business.unit", string="BU Name")
-    department = fields.Many2one("department", string="Department")
+    bu_name = fields.Many2one("business.unit", string="BU Name", required = True)
+    department = fields.Many2one("department", string="Department", required = True)
     # department_name = fields.Many2one("department.department_name", string="Department Name")
     report_to = fields.Many2one("hr.employee", string="Report To")
     city_id = fields.Many2one("employee.city",string="City")

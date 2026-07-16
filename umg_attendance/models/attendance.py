@@ -19,7 +19,7 @@ class Attendance(models.Model):
         ('present', 'Present'),
         ('late', 'Late'),
         ('absent', 'Absent'),
-    ],string="Status", compute = "_compute_status", store = True)
+    ],string="Status", tracking = True)
 
     # Check the condition of Manager and User for check in time
     @api.constrains("check_in")
@@ -41,17 +41,48 @@ class Attendance(models.Model):
                 )
 
     # The logic for status on base check_in time
-    @api.depends('check_in')
-    def _compute_status(self):
-        for rec in self:
-            rec.status = False
+    def get_attendance_status(self, check_in):
 
-            if rec.check_in:
-                check_in_time = fields.Datetime.context_timestamp(rec, rec.check_in).time()
-                if check_in_time <= time(8, 0):
-                    rec.status = "present"
-                elif check_in_time <= time(9, 0):
-                    rec.status = "late"
-                else:
-                    rec.status = "absent"
-            # Odoo stores Datetime values in UTC in the database. "context_timestamp()" is converts the stored UTC time into the current user's local time before comparing it with user check in time.
+        check_in_time = fields.Datetime.context_timestamp(self, check_in).time()
+        if check_in_time <= time(8, 0):
+            return "present"
+        elif check_in_time <= time(9, 0):
+            return "late"
+        else:
+            return "absent"
+        
+    def auto_generate_absent(self):
+        today = fields.Date.context_today(self)
+
+        employees = self.env['hr.employee'].sudo().search([
+            ('active', '=', True)
+        ])
+
+        Leave = self.env['leave']
+
+        for employee in employees:
+            attendance = self.search([
+                ('employee_name', '=', employee.id),
+                ('date', '=', today)
+            ], limit=1)
+
+            if attendance:
+                continue
+
+            leave = Leave.search([
+                ('employee_name', '=', employee.id),
+                ('status', '=', 'approve'),
+                ('date_from', '<=', today),
+                ('date_to', '>=', today),
+            ], limit=1)
+
+            if leave:
+                continue
+
+            self.create({
+                'employee_name' : employee.id,
+                'date' : today,
+                'status' : 'absent',
+            })
+            
+    

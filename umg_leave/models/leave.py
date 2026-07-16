@@ -33,6 +33,14 @@ class Leave(models.Model):
         ('reject', 'Reject'),
     ],string="Status", default = "draft")
 
+    def action_approve(self):
+        for rec in self:
+            rec.status = "approve"
+
+    def action_reject(self):
+        for rec in self:
+            rec.status = "reject"
+
     # Calculating for duration depend on date_from and date_to
     @api.depends("date_from", "date_to")
     def _compute_duration(self):
@@ -71,8 +79,8 @@ class Leave(models.Model):
 
             if rec.leave_title and rec.employee_status:
 
-                entitlement = self.env["leave.entitlement"].search([
-                    ("leave_type_id", "=", rec.leave_title.id),
+                entitlement = self.env["leave.type"].search([
+                    ("name", "=", rec.leave_title.name),
                     ("employee_status", "=", rec.employee_status),
                 ], limit=1)
 
@@ -83,7 +91,7 @@ class Leave(models.Model):
     @api.depends("employee_name", "employee_status", "leave_title", "allocation_year", "entitled_days", "duration", "status")
     def _compute_balance_days (self):
         Leave = self.env['leave']
-        LeaveEntitlement = self.env["leave.entitlement"]
+        # LeaveEntitlement = self.env["leave.entitlement"]
 
         for rec in self:     
 
@@ -91,12 +99,12 @@ class Leave(models.Model):
                 continue
 
              # Find entitlement based on leave type and employee status
-             entitlement = LeaveEntitlement.search([
-                    ("leave_type_id", "=", rec.leave_title.id),
-                    ("employee_status", "=", rec.employee_status),
-                ], limit=1)
+            #  entitlement = LeaveEntitlement.search([
+            #         ("leave_type_id", "=", rec.leave_title.id),
+            #         ("employee_status", "=", rec.employee_status),
+            #     ], limit=1)
 
-             entitled_days = entitlement.entitled_days if entitlement else 0
+            #  entitled_days = entitlement.entitled_days if entitlement else 0
     
              year_start = date(rec.allocation_year, 1, 1)
              year_end = date(rec.allocation_year, 12, 31)
@@ -110,4 +118,4 @@ class Leave(models.Model):
 
              taken_days = sum(leaves.mapped("duration"))
 
-             rec.balance_days = entitled_days - taken_days
+             rec.balance_days = rec.entitled_days - taken_days

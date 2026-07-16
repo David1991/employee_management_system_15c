@@ -28,6 +28,7 @@
         'security/ir.model.access.csv',
 
         'views/attendance_view.xml',
+        'data/attendance_cron.xml',
 
         'views/views.xml',
         'views/templates.xml',

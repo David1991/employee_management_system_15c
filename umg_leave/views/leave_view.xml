@@ -32,6 +32,11 @@
         <field name="model">leave</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_approve" string="Approve" type="object" class="btn-primary" status="draft" groups="umg_leave.group_leave_manager"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" status="draft" groups="umg_leave.group_leave_manager"/>
+                    <field name = "status" nolabel = "1" widget = "statusbar"/>
+                </header>
                 <sheet>    
                     <group>
                         <group> 
@@ -45,14 +50,14 @@
                             <field name="duration"/>
                         </group>
                         <group>
-                            <field name="leave_title"/>
+                            <field name="leave_title" domain="[('employee_status', '=', employee_status)]"/>
                             <field name = "allocation_year"/>    
                             <field name = "entitled_days"/>
                             <field name = "taken_days"/>
                             <field name = "balance_days"/>
                             <field name="report_to"/>
                             <field name="reason"/>
-                            <field name="status" groups="umg_leave.group_leave_manager"/>
+                            <!-- <field name="status" groups="umg_leave.group_leave_manager"/> -->
                         </group>
                     </group>
                 </sheet>

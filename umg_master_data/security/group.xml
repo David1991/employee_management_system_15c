@@ -10,9 +10,9 @@
         <field name="name">Department Manager</field>
     </record>
 
-    <record id="group_leave_entitlement_manager" model="res.groups">
+    <!-- <record id="group_leave_entitlement_manager" model="res.groups">
         <field name="name">Leave Entitlement Manager</field>
-    </record>
+    </record> -->
 
     <record id="group_leave_type_manager" model="res.groups">
         <field name="name">Leave Type Manager</field>
