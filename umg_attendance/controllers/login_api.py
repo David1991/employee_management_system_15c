@@ -59,7 +59,7 @@ class LoginAPI(http.Controller):
         if employee:
             employee_data = {
                 'employee_id' : employee.id if employee else False,
-                'employee_name' : employee.name if employee else "",
+                'name' : employee.name if employee else "",
                 'employee_code' : employee.employee_code if employee else "",
             }
 

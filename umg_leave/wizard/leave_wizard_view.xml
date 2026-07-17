@@ -10,11 +10,12 @@
                     <group>
                         <field name = "date_from"/>
                         <field name = "date_to"/>
+                        <field name = "all_employee"/>
                     </group>
                     <group>    
-                        <field name = "employee_name"/>
-                        <field name = "bu_name"/>
-                        <field name = "department"/>
+                        <field name = "name" attrs="{'readonly': [('all_employee','=',True)]}"/>
+                        <field name = "bu_name" attrs="{'readonly': [('all_employee','=',True)]}"/>
+                        <field name = "department" domain="[('holding_business', '=', bu_name)]" attrs="{'readonly': [('all_employee','=',True)]}"/>
                     </group>
                     <group>
                          <footer> 
@@ -28,7 +29,7 @@
     </record>
 
     <record id = "action_leave_wizard" model = "ir.actions.act_window">
-        <field name = "name">Leave Wizard</field>
+        <field name = "name">Leave Report</field>
         <field name = "type">ir.actions.act_window</field>
         <field name = "res_model">leave.wizard</field>
         <field name = "view_mode">form</field>
@@ -36,9 +37,9 @@
     </record>
 
     <menuitem id = "leave_wizard_menu"
-                name = "Leave Wizard"
+                name = "Leave Report"
                 action = "action_leave_wizard"
-                parent = "menu_main_leave"
-                sequence = "20"
+                parent = "menu_main_reporting"
+                sequence = "10"
                 groups="umg_leave.group_leave_manager"/>
 </odoo>

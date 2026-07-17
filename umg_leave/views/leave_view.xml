@@ -6,7 +6,7 @@
         <field name="model">leave</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="employee_name"/>
+                <field name="name"/>
                 <field name="employee_code"/>
                 <field name="employee_status"/>
                 <field name="bu_name"/>
@@ -40,7 +40,7 @@
                 <sheet>    
                     <group>
                         <group> 
-                            <field name="employee_name"/>
+                            <field name="name"/>
                             <field name="employee_code"/>
                             <field name="employee_status"/>
                             <field name="bu_name"/>

@@ -6,4 +6,11 @@
         name="Leaves"
         parent="employee_management_system.menu_employee_management_root"
         sequence="50"/>
+
+    <!-- For Reporting Main Menu -->
+    <menuitem
+        id="menu_main_reporting"
+        name="Reporting"
+        parent="employee_management_system.menu_employee_management_root"
+        sequence="60"/>
 </odoo>

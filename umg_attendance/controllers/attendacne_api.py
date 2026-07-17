@@ -18,7 +18,7 @@ class AttendanceAPI(http.Controller):
         for rec in attendance:
             result.append({
                 'id' : rec.id,
-                'employee_name' : rec.employee_name.name if rec.employee_name else "",
+                'name' : rec.name.name if rec.name else "",
                 'employee_code' : rec.employee_code,
                 'date' : rec.date,
                 'bu_name' : rec.bu_name.name if rec.bu_name else "",

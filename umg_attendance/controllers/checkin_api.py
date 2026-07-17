@@ -27,7 +27,7 @@ class CheckInAPI(http.Controller):
         today = fields.Date.context_today(request.env.user)
 
         leave = request.env['leave'].sudo().search([
-            ('employee_name', '=', employee.id),
+            ('name', '=', employee.id),
             ('status', '=', 'approve'),
             ('date_from', '<=', today),
             ('date_to', '>=', today),
@@ -41,7 +41,7 @@ class CheckInAPI(http.Controller):
         
         # Check whether employee already checked in today
         attendance = request.env['attendance'].sudo().search([
-            ('employee_name', '=', employee.id),
+            ('name', '=', employee.id),
             ('date', '=', today)
         ], limit=1)
 
@@ -55,25 +55,27 @@ class CheckInAPI(http.Controller):
             check_in = fields.Datetime.now()
 
             # Calculate status
-            local_time = fields.Datetime.context_timestamp(
-                request.env['attendance'],
-                check_in
-            ).time()
+            # local_time = fields.Datetime.context_timestamp(
+            #     request.env['attendance'],
+            #     check_in
+            # ).time()
 
-            if local_time <= time(8, 0):
-                status = "present"
+            # if local_time <= time(8, 0):
+            #     status = "present"
 
-            elif local_time <= time(9, 0):
-                status = "late"
+            # elif local_time <= time(9, 0):
+            #     status = "late"
 
-            else:
-                status = "absent"
+            # else:
+            #     status = "absent"
+            attendance_model = request.env['attendance']
+            status = attendance_model.get_attendance_status(check_in)
 
-            attendance = request.env['attendance'].sudo().create({
-                'employee_name' : employee.id,
-                'employee_code' : employee.employee_code,
-                'bu_name' : employee.bu_name,
-                'department' : employee.department,
+            attendance = attendance_model.sudo().create({
+                'name' : employee.id,
+                # 'employee_code' : employee.employee_code,
+                # 'bu_name' : employee.bu_name,
+                # 'department' : employee.department,
                 'date' : today,
                 'check_in' : check_in,
                 'status' : status,
@@ -82,7 +84,7 @@ class CheckInAPI(http.Controller):
                 'status' : True,
                 'message' : 'Check In Successful!',
                 'attendance_id' : attendance.id,
-                'employee_name' : employee.name,
+                'name' : employee.name,
                 'employee_code' : employee.employee_code,
                 'date' : attendance.date,
                 'bu_name' : employee.bu_name,

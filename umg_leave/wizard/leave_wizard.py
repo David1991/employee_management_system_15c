@@ -6,11 +6,12 @@ class LeaveWizard(models.TransientModel):
     _description = "wizard view for leave"
 
     # For Leave Form
-    employee_name = fields.Many2one("hr.employee", string="Employee Name")
+    name = fields.Many2one("hr.employee", string="Employee Name")
     bu_name = fields.Many2one("business.unit", string="BU Name")
     department = fields.Many2one("department", string="Department")
     date_from = fields.Date(string="Date From")
     date_to = fields.Date(string="Date To")
+    all_employee = fields.Boolean(string="All Employees", default=True)
 
     # For excel report
     # def action_print_excel(self):
@@ -24,26 +25,45 @@ class LeaveWizard(models.TransientModel):
     
     # For Excel Report
     def action_print_excel(self):
+        employees = self.env['hr.employee'].sudo().search([
+            ('active', '=', True)
+        ])
 
         domain = []
 
-        if self.department:
-            domain.append(
-                ("employee_name.department", "=", self.department.id)
-            )
+        # If All Employees is not checked, apply filters
+        if not self.all_employee:
+            if self.department:
+                domain.append(("department", "=", self.department.id))
+            if self.bu_name:
+                domain.append(("bu_name", "=", self.bu_name.id))
+            if self.name:
+                domain.append(("id", "=", self.name.id))
 
-        if self.bu_name:
-            domain.append(
-                ("employee_name.bu_name", "=", self.bu_name.id)
-            )
+        employees = self.env["hr.employee"].sudo().search(domain)
 
-        if self.employee_name:
-            domain.append(
-                ("employee_name", "=", self.employee_name.id)
-            )
+        data = []
+        for employee in employees:
 
-        leaves = self.env["leave"].search(domain)
+            leave_types = self.env['leave.type'].sudo().search([
+                ('employee_status', '=', employee.status)
+            ])
+        
+            for leave_type in leave_types:
+                balance = self.env['leave'].get_leave_balance(employee, leave_type, fields.Date.today().year)
+
+                data.append({
+                    "employee" : employee.name,
+                    "employee_code": employee.employee_code,
+                    "employee_status": employee.status,
+                    "bu_name": employee.bu_name.name if employee.bu_name else "",
+                    "department": employee.department.name if employee.department else "",
+                    "leave_type" : leave_type.name,
+                    "entitled_days" : balance['entitled_days'],
+                    "taken_days" : balance['taken_days'],
+                    "balance_days" : balance['balance_days'],
+                })
 
         report = self.env["leave.excel.report"].create({})
 
-        return report.generate_excel(leaves)
+        return report.generate_excel(data)

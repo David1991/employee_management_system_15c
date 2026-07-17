@@ -40,15 +40,15 @@ class LeaveExcelReport(models.TransientModel):
         row += 1
 
         for leave in records:
-            sheet.write(row, 0, leave.employee_name.name)
-            sheet.write(row, 1, leave.employee_code)
-            sheet.write(row, 2, leave.employee_status)
-            sheet.write(row, 3, leave.bu_name.name)
-            sheet.write(row, 4, leave.department.name)
-            sheet.write(row, 5, leave.leave_title.name)
-            sheet.write(row, 6, leave.entitled_days)
-            sheet.write(row, 7, leave.duration)
-            sheet.write(row, 8, leave.balance_days)
+            sheet.write(row, 0, leave["employee"])
+            sheet.write(row, 1, leave["employee_code"])
+            sheet.write(row, 2, leave["employee_status"])
+            sheet.write(row, 3, leave["bu_name"])
+            sheet.write(row, 4, leave["department"])
+            sheet.write(row, 5, leave["leave_type"])
+            sheet.write(row, 6, leave["entitled_days"])
+            sheet.write(row, 7, leave["taken_days"])
+            sheet.write(row, 8, leave["balance_days"])
 
             row += 1
 
@@ -64,9 +64,7 @@ class LeaveExcelReport(models.TransientModel):
         })
 
         return {
-            "type": "ir.actions.act_window",
-            "res_model": "leave.excel.report",
-            "view_mode": "form",
-            "target": "new",
-            "res_id": self.id,
+            'type': 'ir.actions.act_url',
+            'url': '/web/content/?model=leave.excel.report&id=%s&field=file&filename_field=file_name&download=true' % self.id,
+            'target': 'self',
         }

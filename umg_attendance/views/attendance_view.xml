@@ -6,7 +6,7 @@
         <field name="model">attendance</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="employee_name"/>
+                <field name="name"/>
                 <field name="employee_code"/>
                 <field name="date"/>
                 <field name="bu_name"/>
@@ -27,7 +27,7 @@
                 <sheet>    
                     <group>
                         <group> 
-                            <field name="employee_name"/>
+                            <field name="name"/>
                             <field name="employee_code"/>
                             <field name="date"/>
                             <field name="bu_name"/>  

@@ -8,11 +8,11 @@ class Attendance(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     # For Attendance Form
-    employee_name = fields.Many2one("hr.employee", string="Employee Name")
-    employee_code = fields.Char(related = "employee_name.employee_code", string="Employee ID")
+    name = fields.Many2one("hr.employee", string="Employee Name")
+    employee_code = fields.Char(related = "name.employee_code", string="Employee ID")
     date = fields.Date(string="Date", default = fields.Date.context_today)
-    bu_name = fields.Many2one(related = "employee_name.bu_name", string="BU Name")
-    department = fields.Many2one(related = "employee_name.department", string="Department")
+    bu_name = fields.Many2one(related = "name.bu_name", string="BU Name")
+    department = fields.Many2one(related = "name.department", string="Department")
     check_in = fields.Datetime(string="Check In", default = fields.Datetime.now)
     check_out = fields.Datetime(string="Check Out")
     status = fields.Selection([
@@ -40,6 +40,14 @@ class Attendance(models.Model):
                     _("Attendance users cannot enter a past check-in time.")
                 )
 
+    @api.model
+    def create(self, vals):
+        if vals.get("check_in"):
+            check_in = fields.Datetime.to_datetime(vals["check_in"])
+            vals["status"] = self.get_attendance_status(check_in)
+
+        return super().create(vals)
+    
     # The logic for status on base check_in time
     def get_attendance_status(self, check_in):
 
@@ -62,7 +70,7 @@ class Attendance(models.Model):
 
         for employee in employees:
             attendance = self.search([
-                ('employee_name', '=', employee.id),
+                ('name', '=', employee.id),
                 ('date', '=', today)
             ], limit=1)
 
@@ -70,7 +78,7 @@ class Attendance(models.Model):
                 continue
 
             leave = Leave.search([
-                ('employee_name', '=', employee.id),
+                ('name', '=', employee.id),
                 ('status', '=', 'approve'),
                 ('date_from', '<=', today),
                 ('date_to', '>=', today),
@@ -80,7 +88,7 @@ class Attendance(models.Model):
                 continue
 
             self.create({
-                'employee_name' : employee.id,
+                'name' : employee.id,
                 'date' : today,
                 'status' : 'absent',
             })

@@ -8,11 +8,11 @@ class Leave(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     # For Leave Form
-    employee_name = fields.Many2one("hr.employee", string="Employee Name")
-    employee_code = fields.Char(related = "employee_name.employee_code", string="Employee ID")
-    employee_status = fields.Selection(related = "employee_name.status", string = "Employee Status", store = True)
-    bu_name = fields.Many2one(related = "employee_name.bu_name", string="BU Name")
-    department = fields.Many2one(related = "employee_name.department", string="Department")
+    name = fields.Many2one("hr.employee", string="Employee Name")
+    employee_code = fields.Char(related = "name.employee_code", string="Employee ID")
+    employee_status = fields.Selection(related = "name.status", string = "Employee Status", store = True)
+    bu_name = fields.Many2one(related = "name.bu_name", string="BU Name")
+    department = fields.Many2one(related = "name.department", string="Department")
     date_from = fields.Date(string="Date From")
     date_to = fields.Date(string="Date To")
     duration = fields.Integer(string="Duration", compute = "_compute_duration", store = True)
@@ -72,7 +72,7 @@ class Leave(models.Model):
                         )
                 
     # Check the entitled days depend on leave title and employee status
-    @api.depends("leave_title", "employee_name", "employee_name.status")
+    @api.depends("leave_title", "name", "name.status")
     def _compute_entitled_days(self):
         for rec in self:
             rec.entitled_days = 0
@@ -88,14 +88,14 @@ class Leave(models.Model):
                     rec.entitled_days = entitlement.entitled_days 
 
     # Calculating the leave balance days depend on employee name, leave type,allocation year and entitled days
-    @api.depends("employee_name", "employee_status", "leave_title", "allocation_year", "entitled_days", "duration", "status")
+    @api.depends("name", "employee_status", "leave_title", "allocation_year", "entitled_days", "duration", "status")
     def _compute_balance_days (self):
         Leave = self.env['leave']
         # LeaveEntitlement = self.env["leave.entitlement"]
 
         for rec in self:     
 
-             if not rec.employee_name or not rec.leave_title:
+             if not rec.name or not rec.leave_title:
                 continue
 
              # Find entitlement based on leave type and employee status
@@ -110,7 +110,7 @@ class Leave(models.Model):
              year_end = date(rec.allocation_year, 12, 31)
 
              leaves = Leave.search([
-                ("employee_name", "=", rec.employee_name.id),
+                ("name", "=", rec.name.id),
                 ("leave_title", "=", rec.leave_title.id),
                 ("status", "=", "approve"),
                 ("date_from", ">=", year_start),
@@ -119,3 +119,46 @@ class Leave(models.Model):
              taken_days = sum(leaves.mapped("duration"))
 
              rec.balance_days = rec.entitled_days - taken_days
+    
+    # UI shown Leave/John Doe/Casual Leave/2 Days/07-19-2026
+    def name_get(self):
+        result = []
+
+        for rec in self:
+            employee = rec.name.name if rec.name else ""
+            leave_title = rec.leave_title.name if rec.leave_title else ""
+            duration = rec.duration or 0
+            date_from = ""
+            if rec.date_from:
+                date_from = rec.date_from.strftime("%m-%d-%y")
+
+                display_name = f"{employee}/ {leave_title}/ {duration} Days/ {date_from}"
+
+                result.append((rec.id, display_name))
+        return result
+    
+    def get_leave_balance(self, name, leave_type, allocation_year):
+        year_start = date(allocation_year, 1, 1)
+        year_end = date(allocation_year, 12, 31)
+
+        entitlement = self.env['leave.type'].sudo().search([
+            ('name', '=', leave_type.name),
+            ('employee_status', '=', name.status),
+        ], limit=1)
+        entitled_days = entitlement.entitled_days if entitlement else 0
+
+        leaves = self.search([
+            ('name', '=', name.id),
+            ('leave_title', '=', leave_type.id),
+            ('status', '=', 'approve'),
+            ('date_from', '>=', year_start),
+            ('date_from', '<=', year_end),
+        ])
+
+        taken_days = sum(leaves.mapped('duration'))
+
+        return {
+            "entitled_days": entitled_days,
+            "taken_days": taken_days,
+            "balance_days": entitled_days - taken_days,
+        }

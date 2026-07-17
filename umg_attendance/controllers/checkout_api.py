@@ -26,7 +26,7 @@ class CheckOutAPI(http.Controller):
         today = fields.Date.context_today(request.env.user)
         # Find today's attendance
         attendance = request.env['attendance'].sudo().search([
-            ('employee_name', '=', employee.id),
+            ('name', '=', employee.id),
             ('date', '=', today)
         ], limit=1)
 
@@ -45,7 +45,7 @@ class CheckOutAPI(http.Controller):
                 'status' : True,
                 'message' : 'Check out successful!',
                 'attendance_id' : attendance.id,
-                'employee_name' : employee.name,
+                'name' : employee.name,
                 'employee_code' : employee.employee_code,
                 'date' : attendance.date,
                 'check_in' : attendance.check_in,
