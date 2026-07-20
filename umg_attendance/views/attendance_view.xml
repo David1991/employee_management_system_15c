@@ -27,7 +27,7 @@
                 <sheet>    
                     <group>
                         <group> 
-                            <field name="name"/>
+                            <field name="name" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name="employee_code"/>
                             <field name="date"/>
                             <field name="bu_name"/>  

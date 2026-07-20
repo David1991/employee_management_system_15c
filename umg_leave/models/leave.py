@@ -13,10 +13,10 @@ class Leave(models.Model):
     employee_status = fields.Selection(related = "name.status", string = "Employee Status", store = True)
     bu_name = fields.Many2one(related = "name.bu_name", string="BU Name")
     department = fields.Many2one(related = "name.department", string="Department")
-    date_from = fields.Date(string="Date From")
-    date_to = fields.Date(string="Date To")
+    date_from = fields.Date(string="Date From", required = True)
+    date_to = fields.Date(string="Date To", required = True)
     duration = fields.Integer(string="Duration", compute = "_compute_duration", store = True)
-    leave_title = fields.Many2one("leave.type", string="Leave Title")
+    leave_title = fields.Many2one("leave.type", string="Leave Title", required = True)
     allocation_year = fields.Integer(string="Allocation Year",
         default=lambda self: fields.Date.today().year, required=True)
     # A lambda is an anonymous (unnamed) function.

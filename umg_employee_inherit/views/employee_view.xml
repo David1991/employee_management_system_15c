@@ -10,13 +10,13 @@
                 <field name = "employee_code"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position = "after">
-                <field name = "report_to"/>
+                <field name = "report_to" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='company_id']" position = "after">
-                <field name = "bu_name"/>
+                <field name = "bu_name" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position = "before">
-                <field name = "department" domain="[('holding_business', '=', bu_name)]"/>
+                <field name = "department" domain="[('holding_business', '=', bu_name)]" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='coach_id']" position = "before">
                 <field name = "join_date"/>
@@ -38,16 +38,16 @@
             </xpath>
             <!-- For Private Information Page -->
             <xpath expr="//field[@name='bank_account_id']" position = "after">
-                <field name = "home_no_id"/>
+                <field name = "home_no_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='home_no_id']" position = "after">
-                <field name = "street_id"/>
+                <field name = "street_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='street_id']" position = "after">
-                <field name = "township_id"/>
+                <field name = "township_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='township_id']" position = "after">
-                <field name = "city_id"/>
+                <field name = "city_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
             </xpath>
             <xpath expr="//field[@name='gender']" position = "before">
                 <field name = "phone_number"/>
@@ -63,6 +63,16 @@
             </xpath>
             <xpath expr="//field[@name='country_of_birth']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='address_id']" position="attributes">
+                <attribute name="options">
+                    {'no_open': True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
+                <attribute name="options">
+                    {'no_open': True}
+                </attribute>
             </xpath>
         </field>
     </record> 

@@ -9,19 +9,9 @@ class LeaveWizard(models.TransientModel):
     name = fields.Many2one("hr.employee", string="Employee Name")
     bu_name = fields.Many2one("business.unit", string="BU Name")
     department = fields.Many2one("department", string="Department")
-    date_from = fields.Date(string="Date From")
-    date_to = fields.Date(string="Date To")
-    all_employee = fields.Boolean(string="All Employees", default=True)
-
-    # For excel report
-    # def action_print_excel(self):
-    #     leaves = self.env["leave"].search([
-    #         ("employee_name", "=", self.employee_name.id)
-    #     ])
-
-    #     report = self.env["leave.excel.report"].create({})
-
-    #     return report.generate_excel(leaves)
+    date_from = fields.Date(string="Date From", required = True)
+    date_to = fields.Date(string="Date To", required = True)
+    all_employee = fields.Boolean(string="All BU", default=True)
     
     # For Excel Report
     def action_print_excel(self):
@@ -53,9 +43,9 @@ class LeaveWizard(models.TransientModel):
                 balance = self.env['leave'].get_leave_balance(employee, leave_type, fields.Date.today().year)
 
                 data.append({
-                    "employee" : employee.name,
-                    "employee_code": employee.employee_code,
-                    "employee_status": employee.status,
+                    "employee" : employee.name or "",
+                    "employee_code": employee.employee_code or "",
+                    "employee_status": employee.status or "",
                     "bu_name": employee.bu_name.name if employee.bu_name else "",
                     "department": employee.department.name if employee.department else "",
                     "leave_type" : leave_type.name,

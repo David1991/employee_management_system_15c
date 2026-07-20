@@ -40,18 +40,24 @@ class Attendance(models.Model):
                     _("Attendance users cannot enter a past check-in time.")
                 )
 
-    @api.model
-    def create(self, vals):
+    def write(self, vals):
+        print("WRITE METHOD CALLED:", vals)
         if vals.get("check_in"):
             check_in = fields.Datetime.to_datetime(vals["check_in"])
-            vals["status"] = self.get_attendance_status(check_in)
+            # vals.update({
+            #     "status": self.get_attendance_status(check_in)
+            # })
 
-        return super().create(vals)
+            vals["status"] = self.get_attendance_status(check_in)
+            print("CHECK IN:", check_in)
+
+        return super().write(vals)
     
     # The logic for status on base check_in time
     def get_attendance_status(self, check_in):
 
-        check_in_time = fields.Datetime.context_timestamp(self, check_in).time()
+        check_in_time = fields.Datetime.context_timestamp(self.env.user, check_in).time()
+        print("LOCAL CHECK IN TIME:", check_in_time)
         if check_in_time <= time(8, 0):
             return "present"
         elif check_in_time <= time(9, 0):

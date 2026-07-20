@@ -24,7 +24,7 @@
                         <group> 
                             <field name="name"/>
                             <field name="code"/>  
-                            <field name="holding_business"/>
+                            <field name="holding_business" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
                     </group>
                 </sheet>

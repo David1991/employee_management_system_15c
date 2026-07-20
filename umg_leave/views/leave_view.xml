@@ -40,7 +40,7 @@
                 <sheet>    
                     <group>
                         <group> 
-                            <field name="name"/>
+                            <field name="name" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name="employee_code"/>
                             <field name="employee_status"/>
                             <field name="bu_name"/>
@@ -50,7 +50,7 @@
                             <field name="duration"/>
                         </group>
                         <group>
-                            <field name="leave_title" domain="[('employee_status', '=', employee_status)]"/>
+                            <field name="leave_title" domain="[('employee_status', '=', employee_status)]" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name = "allocation_year"/>    
                             <field name = "entitled_days"/>
                             <field name = "taken_days"/>

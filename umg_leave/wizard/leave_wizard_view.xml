@@ -10,12 +10,10 @@
                     <group>
                         <field name = "date_from"/>
                         <field name = "date_to"/>
-                        <field name = "all_employee"/>
-                    </group>
-                    <group>    
-                        <field name = "name" attrs="{'readonly': [('all_employee','=',True)]}"/>
-                        <field name = "bu_name" attrs="{'readonly': [('all_employee','=',True)]}"/>
-                        <field name = "department" domain="[('holding_business', '=', bu_name)]" attrs="{'readonly': [('all_employee','=',True)]}"/>
+                        <field name = "all_employee"/>    
+                        <field name = "name" attrs="{'invisible': [('all_employee','=',True)]}" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        <field name = "bu_name" attrs="{'invisible': [('all_employee','=',True)]}" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        <field name = "department" domain="[('holding_business', '=', bu_name)]" attrs="{'invisible': [('all_employee','=',True)]}" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     </group>
                     <group>
                          <footer> 
