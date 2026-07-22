@@ -24,6 +24,9 @@ class Attendance(models.Model):
     # Check the condition of Manager and User for check in time
     @api.constrains("check_in")
     def _check_check_in_datetime(self):
+        if self.env.context.get('from_api'):
+            return
+        
         now = fields.Datetime.now()
 
         for rec in self:

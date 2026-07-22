@@ -1,33 +1,59 @@
 from odoo import http, fields
 from odoo.http import request
+from ..utils.jwt_helper import authenticate_jwt
+import json
+from urllib.parse import parse_qs
+from odoo.exceptions import ValidationError
 
 class AttendanceUpdateAPI(http.Controller):
+
+    def json_response(self, data):
+        return request.make_response(
+            json.dumps(data),
+            headers=[
+                ('Content-Type', 'application/json')
+            ]
+        )
+    
     @http.route(
         '/api/attendance/update',
-        type='json',
-        auth='user',
-        methods=['POST'],
+        type='http',
+        auth='none',
+        methods=['PATCH'],
         csrf=False
     )
 
     def attendance_update(self, **kwargs):
-        attendance_id = kwargs.get('attendance_id')
-        check_in = kwargs.get('check_in')
-        check_out = kwargs.get('check_out')
+        authorization = authenticate_jwt()
+        if isinstance(authorization, dict) and authorization.get('status') == False:
+            return self.json_response(authorization)
+        
+        # data = request.httprequest.data.decode('utf-8')
+        # print("Raw Data:", data)
+        # params = parse_qs(data) 
+        # print("Params:", params) 
+
+        params = request.httprequest.form.to_dict()  
+        attendance_id = int(params.get('attendance_id', 0))
+        print("Attendance ID:", attendance_id, type(attendance_id))
+        check_in = params.get('check_in', '')
+        check_out = params.get('check_out', '')
 
         if not attendance_id:
-            return {
+            return self.json_response({
                 'status' : False,
                 'message' : 'Attendance ID is required!'
-            }
+            })
         
         attendance = request.env['attendance'].sudo().browse(attendance_id)
+        print("Attendance:", attendance)
+        print("Exists:", attendance.exists())
 
         if not attendance.exists():
-            return {
+            return self.json_response({
                 'status' : False,
                 'message' : 'Attendance record not found!'
-            }
+            })
         
         values = {}
 
@@ -36,18 +62,36 @@ class AttendanceUpdateAPI(http.Controller):
 
         if check_out:
             values['check_out'] = check_out
+        
+        if not values:
+            return self.json_response({
+                'status': False,
+                'message': 'No update values provided!'
+            })
 
-        attendance.sudo().write(values)
+        # attendance.sudo().write(values)
+        try:
+            attendance.sudo().with_context(from_api = True).write(values)
+        except ValidationError as e:
+            return self.json_response({
+                "status": False,
+                "message": str(e)
+            })
+        except Exception as e:
+            return self.json_response({
+                "status": False,
+                "message": str(e)
+            })
 
-        return {
+        return self.json_response({
             'status' : True,
             'message' : 'Attendance update successful!',
             'attendance_id' : attendance.id,
-            'name' : attendance.name.name,
+            'name' : attendance.name.name if attendance.name else "",
             'employee_code' : attendance.employee_code,
-            'bu_name' : attendance.bu_name.name,
-            'department' : attendance.department.name,
-            'check_in' : attendance.check_in,
-            'check_out' : attendance.check_out,
+            'bu_name' : attendance.bu_name.name if attendance.bu_name else "",
+            'department' : attendance.department.name if attendance.department else "",
+            'check_in' : str(attendance.check_in) if attendance.check_in else "",
+            'check_out' : str(attendance.check_out) if attendance.check_out else "",
             'status_value' : attendance.status,
-        }
+        })

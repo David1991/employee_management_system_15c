@@ -2,27 +2,48 @@ from odoo import http
 from odoo.http import request
 from odoo.exceptions import AccessDenied
 import json
-import secrets
+import jwt
+from datetime import datetime, timedelta
+from odoo.tools import config
+from urllib.parse import parse_qs
+
+JWT_SECRET = config.get('jwt_secret')
+JWT_ALGORITHM = "HS256"
 
 class LoginAPI(http.Controller):
+    def json_response(self, data):
+        return request.make_response(
+            json.dumps(data),
+            headers=[
+                ('Content-Type', 'application/json')
+            ]
+        )
     @http.route(
         '/api/login',
-        type='json',
+        type='http',
         auth='none',
         methods=['POST'],
         csrf=False
     )
 
     def login(self, **kwargs):
-        db = kwargs.get('db')
-        login = kwargs.get('login')
-        password = kwargs.get('password')
+        params = request.httprequest.form.to_dict()
+        
+        print("====================")
+        print("METHOD:", request.httprequest.method)
+        print("CONTENT TYPE:", request.httprequest.content_type) 
+        print("PARAMS:", params)
+        print("====================")
+
+        db = params.get('db', '')
+        login = params.get('login', '')
+        password = params.get('password', '')
 
         if not db or not login or not password:
-            return {
-                "status": False,
-                "message": "Database, login and password are required."
-            }
+            return self.json_response({
+                    "status": False,
+                    "message": "Database, login and password are required."
+                })
         
         try:
             # Authenticate User
@@ -32,24 +53,29 @@ class LoginAPI(http.Controller):
                 password
             )
         except AccessDenied:
-            return {
+            return self.json_response({
                 'status' : False,
                 'message' : 'Invalid Username or Password!'
-            }
+            })
         
         if not uid:
-            return {
+            return self.json_response({
                 'status' : False,
                 'message' : 'Login Failed!'
-            }
+            })
         # Get User Information
         user = request.env['res.users'].sudo().browse(uid)
-        # Generate API Token
-        token = secrets.token_hex(32)
-        # Save Token
-        user.write({
-            'api_token' : token
-        })
+
+        payload = {
+            "uid" : user.id,
+            "login" : user.login,
+        }
+        token = jwt.encode(
+            payload,
+            JWT_SECRET,
+            algorithm = JWT_ALGORITHM
+        )
+        
         # Find Employee linked to this user
         employee = request.env['hr.employee'].sudo().search([
             ('user_id', '=', uid)
@@ -64,11 +90,11 @@ class LoginAPI(http.Controller):
             }
 
 
-        return {
+        return self.json_response({
             'status' : True,
             'message' : 'Login Successful!',
             'user_id' : user.id,
             'user_name' : user.name,
             'token' : token,
             'employee' : employee_data
-        }
+        })
