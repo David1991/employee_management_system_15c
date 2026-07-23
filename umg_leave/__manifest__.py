@@ -31,6 +31,7 @@
         'views/leave_view.xml',
         'wizard/leave_wizard_view.xml',
         'views/leave_excel_report_view.xml',
+        'report/leave_pdf_report_view.xml',
 
         'views/views.xml',
         'views/templates.xml',
