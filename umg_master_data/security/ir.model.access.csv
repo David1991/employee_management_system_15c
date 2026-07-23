@@ -3,7 +3,13 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_business_unit,business_unit,model_business_unit,base.group_user,1,1,1,1
 access_department,department,model_department,base.group_user,1,1,1,1
 access_leave_type,leave_type,model_leave_type,base.group_user,1,1,1,1
+access_company_country,company_country,model_company_country,base.group_user,1,1,1,1
+access_company_city,company_city,model_company_city,base.group_user,1,1,1,1
+access_company_township,company_township,model_company_township,base.group_user,1,1,1,1
+access_company_street,company_street,model_company_street,base.group_user,1,1,1,1
+access_company_home_number,company_home_number,model_company_home_number,base.group_user,1,1,1,1
 
 access_business_unit_manager,business_unit_manager,model_business_unit,group_business_unit_manager,1,1,1,1
 access_department_manager,department_manager,model_department,group_department_manager,1,1,1,1
 access_leave_type_manager,leave_type_manager,model_leave_type,group_leave_type_manager,1,1,1,1
+

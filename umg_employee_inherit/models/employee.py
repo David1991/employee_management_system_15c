@@ -11,7 +11,6 @@ class Employee(models.Model):
     phone_number = fields.Char(string="Phone Number")
     bu_name = fields.Many2one("business.unit", string="BU Name", required = True)
     department = fields.Many2one("department", string="Department", required = True)
-    # department_name = fields.Many2one("department.department_name", string="Department Name")
     report_to = fields.Many2one("hr.employee", string="Report To")
     city_id = fields.Many2one("employee.city",string="City")
     township_id = fields.Many2one("employee.township",string="Township")
@@ -22,18 +21,11 @@ class Employee(models.Model):
         ('confirmation', 'Confirmation'),
     ],string="Status", default = "probation")
     active = fields.Boolean(string="Active", default = True)
-    # For Attendance Form
-    # date = fields.Date(string="Date")
-    # check_in = fields.Datetime(string="Check In")
-    # check_out = fields.Datetime(string="Check Out")
-    # attendance_status = fields.Char(string="Attendance Status")
-    # For Leave Form
-    # date_from = fields.Date(string="Date From")
-    # date_to = fields.Date(string="Date To")
-    # duration = fields.Integer(string="Duration")
-    # leave_type = fields.Char(string="Leave Type")
-    # reason = fields.Text(string="Reason")
-    # leave_status = fields.Char(string="Leave Status")
+    company_address_country_id = fields.Many2one("company.country", related="bu_name.country_id",string="Country")
+    company_address_city_id = fields.Many2one("company.city", related="bu_name.city_id",string="City")
+    company_address_township_id = fields.Many2one("company.township", related="bu_name.township_id",string="Township")
+    company_address_street_id = fields.Many2one("company.street", related="bu_name.street_id",string="Street")
+    company_address_home_no_id = fields.Many2one("company.home.number", related="bu_name.home_no_id",string="Home Number")
 
     @api.model
     def create(self, vals):

@@ -24,11 +24,9 @@ class Attendance(models.Model):
     # Check the condition of Manager and User for check in time
     @api.constrains("check_in")
     def _check_check_in_datetime(self):
-        if self.env.context.get('from_api'):
-            return
         
-        now = fields.Datetime.now()
-
+        # now = fields.Datetime.now()
+        now = fields.Datetime.context_timestamp(self, fields.Datetime.now())
         for rec in self:
             if not rec.check_in:
                 continue
@@ -36,9 +34,10 @@ class Attendance(models.Model):
             # Attendance Manager can enter past check-in times
             if self.env.user.has_group("umg_attendance.group_attendance_manager"):
                 continue
-
+            
+            check_in = fields.Datetime.context_timestamp(self,rec.check_in)
             # Attendance User cannot enter a past check-in time
-            if rec.check_in < now:
+            if check_in < now:
                 raise ValidationError(
                     _("Attendance users cannot enter a past check-in time.")
                 )
@@ -100,6 +99,7 @@ class Attendance(models.Model):
                 'name' : employee.id,
                 'date' : today,
                 'status' : 'absent',
+                'check_in' : False,
             })
             
     
